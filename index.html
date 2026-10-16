@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f1e9">
+<title>Mein Ess-Journal</title>
+<style>
+:root{--bg:#f7f5f0;--card:#fffefa;--ink:#28352f;--muted:#68756e;--accent:#486b58;--line:#dfe5dd;--soft:#edf2eb}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{padding:26px 18px 18px;background:linear-gradient(140deg,#e8eee5,#f7f5f0);border-bottom:1px solid var(--line)}
+.wrap{max-width:720px;margin:auto;padding:0 14px 40px}h1{font-size:27px;line-height:1.15;margin:0 0 7px}h2{font-size:19px;margin:0 0 12px}p{margin:6px 0;color:var(--muted)}.datebar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:17px}.datebar input{max-width:190px}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin-top:14px;box-shadow:0 2px 9px #24382b08}
+label{display:block;font-weight:600;font-size:14px;margin:13px 0 6px}input,textarea,select{width:100%;font:inherit;color:var(--ink);background:white;border:1px solid #cfd8ce;border-radius:11px;padding:12px;outline:none}textarea{min-height:76px;resize:vertical}input:focus,textarea:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px #486b5818}
+button{font:inherit;font-weight:650;border:0;border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--accent);color:white}button.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}button.danger{background:#f7e9e5;color:#8d3e30}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.meal{border:1px solid var(--line);border-radius:14px;padding:13px;margin-top:12px;background:#fff}.mealhead{display:flex;justify-content:space-between;align-items:center;gap:10px}.mealhead strong{font-size:15px}.mealhead button{padding:6px 9px;font-size:13px}
+.scale{display:flex;align-items:center;gap:12px}.scale input{padding:0;accent-color:var(--accent)}.scale output{font-weight:700;min-width:48px;text-align:right}
+.saved-list{display:grid;gap:8px;margin-top:10px}.saved-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;border-radius:10px;background:var(--soft)}.saved-item button{padding:7px 10px;font-size:13px}
+.small{font-size:12px;color:var(--muted)}.status{font-size:13px;color:var(--accent);min-height:18px;margin-top:7px}.footer{padding:18px 4px;font-size:12px;color:var(--muted)}
+@media(min-width:600px){.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid section{margin-top:14px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Mein Ess-Journal</h1><p>Warum esse ich gerade? Beobachten statt bewerten.</p>
+<div class="datebar"><label for="journalDate" style="margin:0">Datum</label><input id="journalDate" type="date"><button id="newDay" class="secondary" type="button">Neuer Tag</button></div>
+<div class="status" id="status" aria-live="polite">Einträge werden automatisch auf diesem Gerät gespeichert.</div>
+</div></header>
+<main class="wrap">
+<section>
+<h2>1 · Meine Essenssituationen</h2><p>Ergänze einen Eintrag, wann immer du möchtest.</p>
+<div id="meals"></div><div class="actions"><button id="addMeal" type="button">＋ Essenssituation hinzufügen</button></div>
+</section>
+<div class="grid">
+<section><h2>2 · Wo war ich heute?</h2>
+<label for="places">An welchen Orten war ich heute?</label><textarea id="places" data-field placeholder="z. B. Arbeit, Supermarkt, zu Hause …"></textarea>
+<label for="eatingPlaces">An welchen Orten habe ich gegessen?</label><textarea id="eatingPlaces" data-field placeholder="z. B. am Arbeitsplatz, am Tisch, auf dem Sofa …"></textarea>
+</section>
+<section><h2>3 · Aus welchen Gründen?</h2>
+<label for="reasons">Warum habe ich heute gegessen?</label><textarea id="reasons" data-field placeholder="Hunger, Appetit, Stress, Langeweile, Angebot …"></textarea>
+</section>
+<section><h2>4 · Meine Gefühle und Begegnungen</h2>
+<label for="feelings">Wie habe ich mich heute gefühlt?</label><textarea id="feelings" data-field placeholder="Welche Gefühle waren da? Gab es Auslöser?"></textarea>
+<label for="people">Welche Menschen habe ich heute getroffen?</label><textarea id="people" data-field placeholder="Wer war da? Wie ging es mir in Gesellschaft?"></textarea>
+</section>
+<section><h2>5 · Was ist mir aufgefallen?</h2>
+<label for="noticed">Beobachtungen des Tages</label><textarea id="noticed" data-field placeholder="Gedanken, Gewohnheiten, Auslöser oder überraschende Beobachtungen …"></textarea>
+</section>
+<section><h2>6 · Emotionale Stabilität</h2>
+<label for="stability">Wie stabil habe ich mich heute gefühlt?</label>
+<div class="scale"><span>1</span><input id="stability" data-field type="range" min="1" max="10" value="5"><span>10</span><output id="stabilityOut">5/10</output></div>
+<label for="stabilityNotes">Was hat meine Stabilität beeinflusst?</label><textarea id="stabilityNotes" data-field placeholder="Was hat mir gutgetan? Was war schwierig?"></textarea>
+</section>
+</div>
+<section>
+<h2>Meine gespeicherten Tage</h2><p>Wähle einen früheren Tag, um ihn wieder aufzurufen.</p>
+<div id="savedDays" class="saved-list"></div>
+<div class="actions">
+<button id="export" class="secondary" type="button">Tage als JSON exportieren</button>
+<button id="downloadText" class="secondary" type="button">Aktuellen Tag als Text speichern</button>
+</div>
+<p class="small">Die Daten bleiben in diesem Browser auf diesem Gerät. Beim Löschen von Website-Daten oder beim Wechsel des Geräts können sie verloren gehen. Exportiere regelmäßig eine Sicherung.</p>
+</section>
+<div class="footer">Privates Journal · Keine Bewertung, nur ehrliche Beobachtung.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fields=['places','eatingPlaces','reasons','feelings','people','noticed','stability','stabilityNotes'];
+let meals=[];
+const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const storeKey='essJournal_v1';
+let allDays={};
+try{allDays=JSON.parse(localStorage.getItem(storeKey)||'{}')}catch(e){allDays={}}
+$('journalDate').value=today();
+function blankMeal(){return {time:'',food:'',hunger:'',reason:'',feeling:''}}
+function currentData(){const data={};fields.forEach(id=>data[id]=$(id).value);data.meals=meals;return data}
+function saveCurrent(silent=true){const date=$('journalDate').value;if(!date)return;allDays[date]=currentData();try{localStorage.setItem(storeKey,JSON.stringify(allDays));if(!silent)status('Gespeichert.')}catch(e){status('Speichern im Browser war nicht möglich. Bitte exportiere deine Daten.')}renderSaved()}
+function status(t){$('status').textContent=t}
+function loadDate(date){if(!date)return;const data=allDays[date]||{};$('journalDate').value=date;fields.forEach(id=>{if(data[id]!==undefined)$(id).value=data[id];else $(id).value=id==='stability'?'5':''});meals=Array.isArray(data.meals)?data.meals.map(m=>({...blankMeal(),...m})):[];if(!meals.length)meals=[blankMeal()];$('stabilityOut').textContent=$('stability').value+'/10';renderMeals();status(allDays[date]?'Gespeicherter Tag geladen.':'Neuer Tag – deine Eingaben werden automatisch gespeichert.')}
+function renderMeals(){const host=$('meals');host.innerHTML='';meals.forEach((m,i)=>{const el=document.createElement('div');el.className='meal';el.innerHTML=`<div class="mealhead"><strong>Eintrag ${i+1}</strong>${meals.length>1?'<button class="danger" type="button" data-remove="'+i+'">Entfernen</button>':''}</div>
+<label>Uhrzeit</label><input type="time" data-k="time" value="${esc(m.time)}">
+<label>Was habe ich gegessen oder getrunken?</label><input data-k="food" value="${esc(m.food)}" placeholder="Mahlzeit, Snack oder Getränk">
+<label>Wie hungrig war ich?</label><select data-k="hunger"><option value="">Bitte wählen</option>${['Körperlich hungrig','Etwas Hunger','Kein Hunger','Unsicher'].map(x=>`<option ${m.hunger===x?'selected':''}>${x}</option>`).join('')}</select>
+<label>Was war der Anlass oder Grund?</label><textarea data-k="reason" placeholder="z. B. Hunger, Appetit, Stress, Langeweile …">${esc(m.reason)}</textarea>
+<label>Wie habe ich mich dabei gefühlt?</label><input data-k="feeling" value="${esc(m.feeling)}" placeholder="z. B. ruhig, gestresst, zufrieden">`;
+el.querySelectorAll('[data-k]').forEach(inp=>inp.addEventListener('input',()=>{meals[i][inp.dataset.k]=inp.value;saveCurrent()}));const rem=el.querySelector('[data-remove]');if(rem)rem.addEventListener('click',()=>{meals.splice(i,1);renderMeals();saveCurrent()});host.appendChild(el)})}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function renderSaved(){const host=$('savedDays');host.innerHTML='';const dates=Object.keys(allDays).sort().reverse();if(!dates.length){host.innerHTML='<p class="small">Noch keine gespeicherten Tage.</p>';return}dates.forEach(date=>{const div=document.createElement('div');div.className='saved-item';const label=document.createElement('span');label.textContent=new Date(date+'T12:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});const b=document.createElement('button');b.className='secondary';b.textContent='Öffnen';b.onclick=()=>{saveCurrent();loadDate(date);window.scrollTo({top:0,behavior:'smooth'})};div.append(label,b);host.appendChild(div)})}
+fields.forEach(id=>$(id).addEventListener('input',()=>{if(id==='stability')$('stabilityOut').textContent=$('stability').value+'/10';saveCurrent()}));
+$('journalDate').addEventListener('change',()=>{saveCurrent();loadDate($('journalDate').value)});
+$('newDay').onclick=()=>{saveCurrent();const d=today();if(!allDays[d])allDays[d]={};loadDate(d);};
+$('addMeal').onclick=()=>{meals.push(blankMeal());renderMeals();saveCurrent()};
+$('export').onclick=()=>{saveCurrent();download('ess-journal-sicherung.json',JSON.stringify(allDays,null,2),'application/json')};
+$('downloadText').onclick=()=>{saveCurrent();const d=currentData();const txt=`MEIN ESS-JOURNAL\nDatum: ${$('journalDate').value}\n\nESSENSSITUATIONEN\n${d.meals.map((m,i)=>`Eintrag ${i+1}\nUhrzeit: ${m.time}\nEssen/Trinken: ${m.food}\nHunger: ${m.hunger}\nAnlass/Grund: ${m.reason}\nGefühl: ${m.feeling}`).join('\n\n')}\n\nORTE HEUTE\nAn welchen Orten war ich: ${d.places}\nOrte, an denen ich gegessen habe: ${d.eatingPlaces}\n\nGRÜNDE ZU ESSEN\n${d.reasons}\n\nGEFÜHLE\n${d.feelings}\n\nGETROFFENE MENSCHEN\n${d.people}\n\nWAS IST MIR AUFGEFALLEN?\n${d.noticed}\n\nEMOTIONALE STABILITÄT: ${d.stability}/10\nEinflussfaktoren: ${d.stabilityNotes}\n`;download(`ess-journal-${$('journalDate').value}.txt`,txt,'text/plain;charset=utf-8')};
+function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+if(!allDays[$('journalDate').value])allDays[$('journalDate').value]={};loadDate($('journalDate').value);renderSaved();
+</script>
+</body>
+</html>
